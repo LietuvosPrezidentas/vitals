@@ -60,5 +60,5 @@ open -W --env VITALS_BENCH=closed --env VITALS_BENCH_OUT=/some/file ~/Applicatio
 
 ## Not tested yet
 
-- The "Open at login" checkbox (registering a login item is a change to his Mac's settings, so it was left to him).
+- The "Open at login" checkbox.
 - The fan-spinning view and the orange "hot" colours: the fan stayed off and nothing ran hot during testing.
