@@ -310,6 +310,10 @@ private struct Sparkline: View {
         let values = points.map(\.v)
         let lo = (values.min() ?? 0) - 2, hi = (values.max() ?? 1) + 2
         let now = points.last?.t ?? Date()
+        // Until five minutes have been recorded, stretch what there is across the full width.
+        let start = max(points.first?.t ?? now, now.addingTimeInterval(-300))
+        let span = now.timeIntervalSince(start)
+        let caption = span >= 290 ? "last 5 min" : span < 60 ? "last \(Int(span)) s" : "last \(Int(span / 60)) min"
         Chart(Array(points.enumerated()), id: \.offset) { _, p in
             AreaMark(x: .value("t", p.t), yStart: .value("lo", lo), yEnd: .value("°", p.v))
                 .foregroundStyle(tint.opacity(0.06))
@@ -317,12 +321,12 @@ private struct Sparkline: View {
                 .foregroundStyle(tint)
                 .lineStyle(StrokeStyle(lineWidth: 1.5))
         }
-        .chartXScale(domain: now.addingTimeInterval(-300)...now)
+        .chartXScale(domain: start...max(now, start.addingTimeInterval(1)))
         .chartYScale(domain: lo...hi)
         .chartXAxis(.hidden)
         .chartYAxis(.hidden)
         .overlay(alignment: .topTrailing) {
-            Text("last 5 min").font(.system(size: 9)).foregroundStyle(.tertiary)
+            Text(caption).font(.system(size: 9)).foregroundStyle(.tertiary)
         }
     }
 }
